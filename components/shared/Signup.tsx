@@ -22,9 +22,12 @@ import axios from "axios";
 import { useUploadThing } from "@/lib/uploadthing";
 import { FileUploader } from "./FileUploader";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 const Signup: React.FC = () => {
+  const { startUpload } = useUploadThing("imageUploader");
   const [files, setFiles] = useState<File[]>([]);
+  const router = useRouter();
 
   const form = useForm<z.infer<typeof signupFormSchema>>({
     resolver: zodResolver(signupFormSchema),
@@ -36,21 +39,40 @@ const Signup: React.FC = () => {
   });
 
   const onSubmit = async (values: z.infer<typeof signupFormSchema>) => {
-    const { username, email, password } = values;
-    const imageUrl: string = "";
+    const { username, email, password, imageUrl } = values;
     const isPremiumUser: boolean = false;
     const premiumType: string = "Basic";
 
-    const { data } = await axios.post("/api/auth/signup", {
-      username,
-      email,
-      password,
-      imageUrl,
-      isPremiumUser,
-      premiumType,
-    });
+    let uploadedImageUrl = imageUrl;
 
-    console.log(data);
+    if (files.length > 0) {
+      const uploadedImages = await startUpload(files);
+
+      if (!uploadedImages) {
+        return;
+      }
+
+      uploadedImageUrl = uploadedImages[0].url;
+      console.log(uploadedImageUrl);
+    }
+
+    try {
+      const res = await axios.post("/api/auth/signup", {
+        username,
+        email,
+        password,
+        imageUrl: uploadedImageUrl,
+        isPremiumUser,
+        premiumType,
+      });
+
+      if (res.status == 200) {
+        router.push("/auth/login");
+      }
+    } catch (e) {
+      console.log(e);
+      alert("Some server error");
+    }
   };
 
   return (

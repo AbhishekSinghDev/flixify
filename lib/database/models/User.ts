@@ -1,10 +1,11 @@
 import mongoose, { Schema, models } from "mongoose";
 
 interface UserSchemaInterface {
+  _id: string;
   username: string;
   email: string;
   password: string;
-  imageUrl?: string;
+  imageUrl: string;
   isPremiumUser: boolean;
   premiumType: string;
   familyMembers?: Array<string>;
@@ -27,7 +28,7 @@ const UserSchema = new mongoose.Schema({
   },
   imageUrl: {
     type: String,
-    required: false,
+    required: true,
     default:
       "https://wallpapers.com/images/hd/netflix-profile-pictures-5yup5hd2i60x7ew3.jpg",
   },

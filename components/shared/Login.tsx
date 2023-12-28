@@ -19,9 +19,12 @@ import { Input } from "@/components/ui/input";
 
 import loginFormSchema from "@/lib/loginFormSchema";
 
-import axios from "axios";
+import axios, { AxiosError } from "axios";
+import { useRouter } from "next/navigation";
 
 const Login: React.FC = () => {
+  const router = useRouter();
+
   const form = useForm<z.infer<typeof loginFormSchema>>({
     resolver: zodResolver(loginFormSchema),
     defaultValues: {
@@ -35,19 +38,20 @@ const Login: React.FC = () => {
 
     const { email, password } = values;
 
-    // const { data } = await axios.post(
-    //   "/api/auth/login",
-    //   JSON.stringify({
-    //     email: email,
-    //     password: password,
-    //   })
-    // );
+    try {
+      const res = await axios.post("/api/auth/login", {
+        email: email,
+        password: password,
+      });
 
-    const data = await fetch("/api/auth/login", {
-      method: "POST",
-      body: JSON.stringify(values),
-    });
-    console.log(data);
+      if (res.status == 200) {
+        window.location.href = "/";
+      }
+    } catch (e) {
+      console.log(e);
+      const error = e as AxiosError;
+      alert(error.message);
+    }
   };
 
   return (

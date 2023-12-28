@@ -16,8 +16,34 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import Image from "next/image";
 import { Separator } from "../ui/separator";
+import React from "react";
+import axios, { AxiosError } from "axios";
 
-export function MyAvatar() {
+interface MyAvatarInterface {
+  fallbackName: string;
+  avatarImage: string;
+}
+
+const MyAvatar: React.FC<MyAvatarInterface> = ({
+  fallbackName,
+  avatarImage,
+}) => {
+  const logOut = async () => {
+    try {
+      const res = await axios.get("/api/auth/logout");
+
+      if (res.status == 200) {
+        alert("Logout successfull");
+        window.location.reload();
+      }
+
+      return;
+    } catch (e) {
+      const err = e as AxiosError;
+      alert(`${err.message}`);
+    }
+  };
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -27,11 +53,8 @@ export function MyAvatar() {
           size="sm"
         >
           <Avatar>
-            <AvatarImage
-              src="https://wallpapers.com/images/hd/netflix-profile-pictures-5yup5hd2i60x7ew3.jpg"
-              alt="@shadcn"
-            />
-            <AvatarFallback>CN</AvatarFallback>
+            <AvatarImage src={avatarImage} alt="userimage" />
+            <AvatarFallback>{fallbackName}</AvatarFallback>
           </Avatar>
           <Image
             src="/icons/down.svg"
@@ -79,11 +102,13 @@ export function MyAvatar() {
         <DropdownMenuItem>GitHub</DropdownMenuItem>
         <DropdownMenuItem>Support</DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem>
+        <DropdownMenuItem onClick={logOut}>
           Log out
           <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );
-}
+};
+
+export default MyAvatar;

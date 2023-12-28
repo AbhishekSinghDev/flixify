@@ -1,6 +1,6 @@
 import connectToDatabase from "@/lib/database";
 import User from "@/lib/database/models/User";
-import bcrypt, { hash } from "bcrypt";
+import bcrypt from "bcrypt";
 import { UserSchemaInterface } from "@/lib/database/models/User";
 
 export const POST = async (req: Request, res: Response) => {
@@ -14,7 +14,8 @@ export const POST = async (req: Request, res: Response) => {
     premiumType,
     familyMembers,
   } = body;
-  if (!username || !email || !password) {
+
+  if (!username || !email || !password || !imageUrl) {
     return new Response("Please provide all the details", { status: 400 });
   }
 

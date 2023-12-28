@@ -1,18 +1,48 @@
-import React from "react";
+"use client";
+import React, { useEffect, useState } from "react";
 
 import Image from "next/image";
 import Link from "next/link";
 
 // Shadcn imports
 import { Button } from "../ui/button";
-import { MyAvatar } from "./MyAvatar";
+import MyAvatar from "./MyAvatar";
 import { ModeToggle } from "./DarkmodeToggle";
 
 // constant imports
 import { headerNavLinks } from "@/constants/index";
+import axios, { AxiosResponse } from "axios";
 
 const Header: React.FC = () => {
-  const isLoggedIn: boolean = false;
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+  const [username, setUsername] = useState<string>("");
+  const [profileIcon, setProfileIcon] = useState<string>(
+    "https://cdn.prod.website-files.com/63a2cd9595ab8c1aa7aecc08/64c8ceeaa7097c40f3a264ce_HASHTAGArtboard%20132.png"
+  );
+
+  useEffect(() => {
+    const getUser = async () => {
+      const res = await axios.get("/api/auth/get-token");
+
+      const userId: string = res.data.user.userId || undefined;
+
+      if (userId) {
+        setIsLoggedIn(true);
+        const res: AxiosResponse<any, any> = await axios.post(
+          `/api/user/${userId}`
+        );
+        console.log(res);
+        const userImageUrl = res.data.user.imageUrl;
+        const userFirstWord: string = res.data.user.username[0];
+        setUsername(userFirstWord);
+        setProfileIcon(userImageUrl);
+
+        return;
+      }
+    };
+
+    getUser();
+  }, []);
 
   return (
     <nav className="max-w-[90%] lg:mx-auto p-5 md:px-10 xl:px-0 w-full flex items-center justify-between sticky top-0 z-[9999]">
@@ -65,7 +95,7 @@ const Header: React.FC = () => {
               className="m-0 invert"
             />
           </div>
-          <MyAvatar />
+          <MyAvatar fallbackName={username} avatarImage={profileIcon} />
           <ModeToggle />
         </div>
       )}
