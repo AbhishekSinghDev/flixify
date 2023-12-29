@@ -1,7 +1,7 @@
 import React from "react";
 
 const Footer = () => {
-  return <div>Footer</div>;
+  return <div className="lg:absolute lg:top-[105vw]">Footer</div>;
 };
 
 export default Footer;

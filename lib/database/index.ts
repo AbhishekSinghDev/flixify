@@ -12,7 +12,7 @@ const connectToDatabase = async () => {
   cached.promise =
     cached.promise ||
     mongoose.connect(MONGODB_URI, {
-      dbName: "event-ocean",
+      dbName: "flixify",
       bufferCommands: false,
     });
 
