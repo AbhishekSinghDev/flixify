@@ -5,6 +5,7 @@ import { MovieSchemaInterface } from "@/lib/database/models/Movie";
 import Image from "next/image";
 import { CiCircleInfo } from "react-icons/ci";
 import axios from "axios";
+import ModelPop from "./ModelPop";
 
 const Billboard: React.FC = () => {
   const [movie, setMovie] = useState<MovieSchemaInterface>();
@@ -61,7 +62,7 @@ const Billboard: React.FC = () => {
           </p>
           <button className="border-none bg-white rounded-md px-4 py-2 ml-2 bg-opacity-40 text-white flex items-center justify-center gap-2 cursor-pointer text-sm">
             <CiCircleInfo />
-            More Info
+            <ModelPop movie={movie} renderingOn="billboard" />
           </button>
         </div>
       )}

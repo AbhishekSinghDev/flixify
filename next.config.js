@@ -8,6 +8,7 @@ const nextConfig = {
       "upload.wikimedia.org",
       "raw.githubusercontent.com",
       "image.tmdb.org",
+      "img.youtube.com",
     ],
   },
   reactStrictMode: false,

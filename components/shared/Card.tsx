@@ -1,16 +1,43 @@
 import { MovieSchemaInterface } from "@/lib/database/models/Movie";
-import Image from "next/image";
 import React from "react";
 import ModelPop from "./ModelPop";
+import { Badge } from "../ui/badge";
 
 interface CardProps {
   movie: MovieSchemaInterface;
+  renderingOn?: "premiumContent";
 }
 
-const CardCatelogue: React.FC<CardProps> = ({ movie }) => {
+const CardCatelogue: React.FC<CardProps> = ({ movie, renderingOn }) => {
   return (
     <div className="group col-span">
-      <ModelPop movie={movie} renderingOn="moviesCatalogue" />
+      <ModelPop
+        movie={movie}
+        renderingOn={`${
+          renderingOn === "premiumContent"
+            ? "premiumContent"
+            : "moviesCatalogue"
+        }`}
+      />
+      {renderingOn && renderingOn === "premiumContent" && (
+        <div className="flex items-center justify-between w-full gap-2">
+          <div>
+            <p className="sm:text-base text-sm line-clamp-1">
+              <span className="dark:text-green-400 font-medium">Title: </span>
+              {movie.title && movie.title}
+            </p>
+            <p className="sm:text-base text-sm line-clamp-1">
+              <span className="dark:text-green-400 text-black font-medium">
+                Imdb rating:{" "}
+              </span>
+              {movie.rating && movie.rating} / 10
+            </p>
+          </div>
+          <div>
+            <Badge>{movie.genre && movie.genre}</Badge>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

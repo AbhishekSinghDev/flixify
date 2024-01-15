@@ -13,25 +13,39 @@ import {
 } from "@/components/ui/alert-dialog";
 import { MovieSchemaInterface } from "@/lib/database/models/Movie";
 import { FaPlay } from "react-icons/fa";
+import { useRouter } from "next/navigation";
 
 interface ModelPopProps {
   movie: MovieSchemaInterface;
-  renderingOn?: "moviesCatalogue" | "popularOnFlixify";
+  renderingOn?:
+    | "moviesCatalogue"
+    | "popularOnFlixify"
+    | "billboard"
+    | "premiumContent";
 }
 
 const ModelPop: React.FC<ModelPopProps> = ({ movie, renderingOn }) => {
+  const router = useRouter();
+  const onMovieClick = () => {
+    router.push(`/premium-movie/${movie._id}`);
+  };
+
   return (
     <AlertDialog>
       <AlertDialogTrigger>
-        <img
-          src={movie?.thumbnailUrl}
-          alt="movie"
-          className={`cursor-pointer object-cover transition duration-150 shadow-xl rounded-md group-hover:opacity-90 sm:group-hover:opacity-80 w-full rounded-xl ${
-            renderingOn && renderingOn === "moviesCatalogue"
-              ? "h-full"
-              : "h-[12vw]"
-          }`}
-        />
+        {renderingOn === "billboard" ? (
+          <p>More Info</p>
+        ) : (
+          <img
+            src={movie?.thumbnailUrl}
+            alt="movie"
+            className={`cursor-pointer object-cover transition duration-150 shadow-xl rounded-md group-hover:opacity-90 sm:group-hover:opacity-80 w-full rounded-xl ${
+              renderingOn && renderingOn === "moviesCatalogue"
+                ? "h-[50vw] md:h-full"
+                : "h-[12vw]"
+            }`}
+          />
+        )}
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
@@ -79,7 +93,7 @@ const ModelPop: React.FC<ModelPopProps> = ({ movie, renderingOn }) => {
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction>
+          <AlertDialogAction onClick={onMovieClick}>
             <FaPlay />
           </AlertDialogAction>
         </AlertDialogFooter>

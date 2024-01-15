@@ -14,13 +14,13 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 
-const MoviesCatalogue: React.FC = () => {
+const PremiumContent: React.FC = () => {
   const [allMovies, setAllMovies] = useState<MovieSchemaInterface[]>();
 
   useEffect(() => {
     const getAllMovies = async () => {
       try {
-        const { data } = await axios.get("/api/movie");
+        const { data } = await axios.get("/api/movie/premium");
 
         setAllMovies(data.movies);
       } catch (err) {
@@ -48,7 +48,11 @@ const MoviesCatalogue: React.FC = () => {
               <div className="p-1">
                 <Card>
                   <CardContent className="flex items-center justify-start p-6">
-                    <CardCatelogue key={movie._id} movie={movie} />
+                    <CardCatelogue
+                      key={movie._id}
+                      movie={movie}
+                      renderingOn="premiumContent"
+                    />
                   </CardContent>
                 </Card>
               </div>
@@ -61,4 +65,4 @@ const MoviesCatalogue: React.FC = () => {
   );
 };
 
-export default MoviesCatalogue;
+export default PremiumContent;
